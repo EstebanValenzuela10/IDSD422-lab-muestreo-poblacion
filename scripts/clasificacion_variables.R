@@ -33,9 +33,12 @@ str(clientes)
 # TODO 2: completa el bucle para imprimir, por columna, cuántos valores únicos
 #         hay y cuáles son. Pista: for (columna in names(clientes)) { ... } con
 #         unique() y length(). ¿Cuántas categorías tiene genero?
-# for (columna in names(clientes)) {
-#   ...
-# }
+cat("\nValores únicos por columna:\n")
+for (columna in names(clientes)) {
+  unicos <- unique(clientes[[columna]])
+  cat(sprintf("  Columna: %-20s | Cantidad: %d | Valores: %s\n", 
+              columna, length(unicos), paste(unicos, collapse = ", ")))
+}
 
 # ---------------------------------------------------------------------------
 # 4. Declarar el orden de las variables ordinales
@@ -46,10 +49,18 @@ str(clientes)
 #
 # TODO 3: convierte nivel_educacion con factor(..., levels = c(...), ordered = TRUE).
 #         Comprueba con min(): debe devolver "Primaria".
+orden_educacion <- c("Primaria", "Secundaria", "Universidad", "Posgrado")
+clientes$nivel_educacion <- factor(clientes$nivel_educacion, levels = orden_educacion, ordered = TRUE)
+cat(sprintf("\nMínimo nivel de educación: %s\n", as.character(min(clientes$nivel_educacion))))
+
 # TODO 4: haz lo mismo con satisfaccion (escala 1–5 como etiquetas ordenadas).
 #         Prueba extra: ¿qué pasa si en levels escribes "Postgrado" (con t) para
 #         nivel_educacion? Cuenta los faltantes con sum(is.na(...)) — la trampa
 #         del typo es silenciosa.
+orden_satisfaccion <- c(1, 2, 3, 4, 5)
+clientes$satisfaccion <- factor(clientes$satisfaccion, levels = orden_satisfaccion, ordered = TRUE)
+cat(sprintf("Mínima satisfacción: %s\n", as.character(min(clientes$satisfaccion))))
+cat(sprintf("Valores faltantes en nivel_educacion: %d\n", sum(is.na(clientes$nivel_educacion))))
 
 # ---------------------------------------------------------------------------
 # 5. Resumen de la clasificación (para el informe)
@@ -57,14 +68,14 @@ str(clientes)
 # TODO 5: completa el resumen con el tipo de cada variable (el criterio que
 #         justifica cada clasificación va en el informe).
 clasificacion <- c(
-  cliente_id         = "…",
-  edad               = "…",
-  numero_hijos       = "…",
-  genero             = "…",
-  nivel_educacion    = "…",
-  ciudad             = "…",
-  ingresos_mensuales = "…",
-  satisfaccion       = "…"
+  cliente_id         = "Categorica nominal (Identificador)",
+  edad               = "Numerica discreta",
+  numero_hijos       = "Numerica discreta",
+  genero             = "Categorica nominal",
+  nivel_educacion    = "Categorica ordinal",
+  ciudad             = "Categorica nominal",
+  ingresos_mensuales = "Numerica continua",
+  satisfaccion       = "Categorica ordinal"
 )
 cat("\nResumen de la clasificación (para el informe):\n")
 for (variable in names(clasificacion)) {
